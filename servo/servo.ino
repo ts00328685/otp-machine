@@ -16,20 +16,19 @@ void setup() {
   pinMode(A0, OUTPUT);
   digitalWrite(A0, LOW);
 
+  pressPasswordBtn();
 }
 
 void loop() {
-
-  delay(1000);
+  delay(300);
   handleServo();
-
 }
 
 void handleServo() {
   int a1Val = digitalRead(A1);
 
   for (int i = 1; i <= 5; i++) {
-    delay(300);
+    delay(200);
     a1Val = digitalRead(A1);
   }
 
@@ -39,47 +38,9 @@ void handleServo() {
 
   if (flag) {
 
-    int val = 0;
-
-    // SERVO 2
-    for (int i = 1; i <= 2; i++ ) {
-      val = map(550, 0, 1023, 0, 180);     // scale it to use it with the servo (value between 0 and 180)
-      servo2.write(val);                  // sets the servo position according to the scaled value
-      delay(500);
-
-      val = map(260, 0, 1023, 0, 180);     // scale it to use it with the servo (value between 0 and 180)
-      servo2.write(val);                  // sets the servo position according to the scaled value
-      delay(250);                           // waits for the servo to get there
-
-      val = map(550, 0, 1023, 0, 180);     // scale it to use it with the servo (value between 0 and 180)
-      servo2.write(val);                  // sets the servo position according to the scaled value
-      delay(1000);                           // waits for the servo to get there
-    }
-
-    // SERVO 1
-    for (int i = 1; i <= 2; i++ ) {
-      // reads the value of the potentiometer (value between 0 and 1023)
-      val = map(470, 0, 1023, 0, 180);     // scale it to use it with the servo (value between 0 and 180)
-      servo1.write(val);                  // sets the servo position according to the scaled value
-
-      val = map(850, 0, 1023, 0, 180);     // scale it to use it with the servo (value between 0 and 180)
-      servo1.write(val);                  // sets the servo position according to the scaled value
-      delay(200);                           // waits for the servo to get there
-
-      val = map(470, 0, 1023, 0, 180);     // scale it to use it with the servo (value between 0 and 180)
-      servo1.write(val);                  // sets the servo position according to the scaled value
-      delay(1000);
-
-      val = map(200, 0, 1023, 0, 180);     // scale it to use it with the servo (value between 0 and 180)
-      servo1.write(val);                  // sets the servo position according to the scaled value
-      delay(200);
-
-      val = map(470, 0, 1023, 0, 180);     // scale it to use it with the servo (value between 0 and 180)
-      servo1.write(val);                  // sets the servo position according to the scaled value
-      delay(1000);
-
-    }
-
+    pressPowerBtn();
+    pressPasswordBtn();
+    pressPasswordBtn();
 
     digitalWrite(A0, HIGH);
     delay(2000);
@@ -88,4 +49,43 @@ void handleServo() {
     flag = false;
     delay(12000);
   }
+}
+
+void pressPowerBtn() {
+
+  // SERVO 2
+  servo2.write(96);
+  delay(150);
+
+  servo2.write(45);
+  delay(150);
+
+  servo2.write(96);
+  delay(500);
+}
+
+
+void pressPasswordBtn() {
+
+  // SERVO 1
+
+  // lift up
+  servo1.write(82);
+
+  // bottom right default #149
+  servo1.write(130);
+  delay(150);
+
+  // lift up
+  servo1.write(82);
+  delay(600);
+
+  // bottom left  default #35
+  servo1.write(40);
+  delay(150);
+
+  // lift up
+  servo1.write(82);
+  delay(600);
+
 }

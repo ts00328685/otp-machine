@@ -14,8 +14,6 @@ int wifiLedPin = D9;  // D9 ?
 
 WebSocketsClient webSocket;
 
-String readString;
-
 char wifiNameReadFromSdCard[50];
 char wifiPwdReadFromSdCard[50];
 
@@ -33,11 +31,11 @@ void setup() {
   pinMode(wifiLedPin, OUTPUT);
   digitalWrite(wifiLedPin, LOW);
 
-  // readWifiNameAndPwdFromCameraModule();
+  readWifiNameAndPwdFromCameraModule();
   
   WiFi.mode(WIFI_STA);
-  // WiFi.begin(wifiNameReadFromSdCard, wifiPwdReadFromSdCard);
-  WiFi.begin(ssid[wifiIndex], password[wifiIndex]);
+  WiFi.begin(wifiNameReadFromSdCard, wifiPwdReadFromSdCard);
+  // WiFi.begin(ssid[wifiIndex], password[wifiIndex]);
 
   // Connect to WiFi network
   int counter = 0;
@@ -46,8 +44,8 @@ void setup() {
     digitalWrite(wifiLedPin, HIGH);
     delay(500);
     Serial.print("Connecting to ");
-    // Serial.println(wifiNameReadFromSdCard);
-    Serial.println(ssid[wifiIndex]);
+    Serial.println(wifiNameReadFromSdCard);
+    // Serial.println(ssid[wifiIndex]);
     digitalWrite(wifiLedPin, LOW);
     delay(500);
 
@@ -88,8 +86,6 @@ void readWifiNameAndPwdFromCameraModule() {
   Serial.println("readString: ");
   Serial.println(readString);
 
-  char wifiNameReadFromSdCard[50];
-  char wifiPwdReadFromSdCard[50];
   int i = 8;  // start from WIFI_OK#ssid,pwd, till ,
   int j = 0;
   int k = 0;
