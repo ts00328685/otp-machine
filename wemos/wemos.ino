@@ -62,6 +62,13 @@ void setup() {
   webSocket.begin(ws_host, ws_port, ws_url);
   // event handler
   webSocket.onEvent(webSocketEvent);
+  // try ever 5000 again if connection has failed
+  webSocket.setReconnectInterval(3000);
+  // start heartbeat (optional)
+  // ping server every N ms
+  // expect pong from server within 3000 ms
+  // consider connection disconnected if pong is not received 2 times
+  webSocket.enableHeartbeat(7000, 3000, 2);
 }
 
 void loop() {

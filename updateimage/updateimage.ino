@@ -121,17 +121,21 @@ void setup() {
   config.pin_sscb_scl = SIOC_GPIO_NUM;
   config.pin_pwdn = PWDN_GPIO_NUM;
   config.pin_reset = RESET_GPIO_NUM;
-  config.xclk_freq_hz = 20000000;
+  // 20000000 to 5000000 ? overheat ?
+  config.xclk_freq_hz = 5000000;
   config.pixel_format = PIXFORMAT_JPEG;
+  // to prevent upload fail
+  config.jpeg_quality = 6;
+  config.frame_size = FRAMESIZE_XGA;
 
   // init with high specs to pre-allocate larger buffers
   if (psramFound()) {
     config.frame_size = FRAMESIZE_SVGA;
-    config.jpeg_quality = 10;  //0-63 lower number means higher quality
+    config.jpeg_quality = 6;  //0-63 lower number means higher quality
     config.fb_count = 2;
   } else {
     config.frame_size = FRAMESIZE_CIF;
-    config.jpeg_quality = 10;  //0-63 lower number means higher quality
+    config.jpeg_quality = 6;  //0-63 lower number means higher quality
     config.fb_count = 1;
   }
 
