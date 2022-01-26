@@ -20,6 +20,10 @@ char wifiPwdReadFromSdCard[50];
 void setup() {
   Serial.begin(115200);
 
+  Serial.println("WiFi mac Address\n");
+  Serial.println(WiFi.macAddress());
+  Serial.println("\n");
+  
   Serial.setDebugOutput(false);
 
   Serial.setTimeout(300);

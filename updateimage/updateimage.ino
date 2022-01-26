@@ -10,6 +10,7 @@
 */
 
 #include <Arduino.h>
+#include "esp_wpa2.h"
 #include <WiFi.h>
 #include "FS.h"
 #include "SD_MMC.h"
@@ -23,6 +24,15 @@ const int wifiIndex = 0;
 
 char wifiNameReadFromSdCard[50];
 char wifiPwdReadFromSdCard[50];
+
+const char* ws_host = "heloword.com";
+const int ws_port = 8088;
+const char* ws_url = "/endpointOtp";
+
+const char* ssidWpa2 = "WebComm_5G"; // your ssid
+#define EAP_ID "anthony"
+#define EAP_USERNAME "anthony"
+#define EAP_PASSWORD "f1278450G"
 
 
 String serverName = "www.heloword.com";   // REPLACE WITH YOUR Raspberry Pi IP ADDRESS
@@ -66,7 +76,7 @@ void setup() {
 
   // ONBOARD LED as indicator
   pinMode(ONBOARD_LED, OUTPUT); // Set the pin as output
-  digitalWrite(ONBOARD_LED, LOW); //Turn on
+  digitalWrite(ONBOARD_LED, LOW); // Turn on
 
   setupSdCard();
   readFile(SD_MMC, "/wifi.txt");
@@ -75,17 +85,38 @@ void setup() {
   WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);
 
 
-
   pinMode (LED_BUILTIN, OUTPUT);
   WiFi.mode(WIFI_STA);
+  Serial.println("mac address: ");
+  Serial.println(WiFi.macAddress());
   Serial.println();
+
+
+  // 2022/01/17 not working
+  // WPA2 enterprise magic starts here
+  //  Serial.println("connection to WPA2: ");
+  //  WiFi.disconnect(true);
+  //  esp_wifi_sta_wpa2_ent_set_identity((uint8_t *)EAP_ID, strlen(EAP_ID));
+  //  esp_wifi_sta_wpa2_ent_set_username((uint8_t *)EAP_USERNAME, strlen(EAP_USERNAME));
+  //  esp_wifi_sta_wpa2_ent_set_password((uint8_t *)EAP_PASSWORD, strlen(EAP_PASSWORD));
+  //  esp_wpa2_config_t configWpa2 = WPA2_CONFIG_INIT_DEFAULT();
+  //  esp_wifi_sta_wpa2_ent_enable(&configWpa2);
+  //  Serial.println("intialized WPA2 settings");
+  // WPA2 enterprise magic ends here
+
+
+
   Serial.print("Connecting to ");
   //  Serial.println(ssid[wifiIndex]);
   Serial.println(wifiNameReadFromSdCard);
 
   int counter = 0;
+
+
   //  WiFi.begin(ssid[wifiIndex], password[wifiIndex]);
-  WiFi.begin(wifiNameReadFromSdCard, wifiPwdReadFromSdCard);
+    WiFi.begin(wifiNameReadFromSdCard, wifiPwdReadFromSdCard);
+//  WiFi.begin(ssidWpa2);
+
   while (WiFi.status() != WL_CONNECTED) {
     digitalWrite(ONBOARD_LED, HIGH);
     Serial.print("retry: ");
@@ -124,20 +155,17 @@ void setup() {
   // 20000000 to 5000000 ? overheat ?
   config.xclk_freq_hz = 5000000;
   config.pixel_format = PIXFORMAT_JPEG;
-  // to prevent upload fail
-  config.jpeg_quality = 6;
-  config.frame_size = FRAMESIZE_XGA;
 
   // init with high specs to pre-allocate larger buffers
-  if (psramFound()) {
-    config.frame_size = FRAMESIZE_SVGA;
-    config.jpeg_quality = 6;  //0-63 lower number means higher quality
-    config.fb_count = 2;
-  } else {
-    config.frame_size = FRAMESIZE_CIF;
-    config.jpeg_quality = 6;  //0-63 lower number means higher quality
-    config.fb_count = 1;
-  }
+  //  if (psramFound()) {
+  config.frame_size = FRAMESIZE_VGA;
+  config.jpeg_quality = 30;  //0-63 lower number means higher quality
+  config.fb_count = 1;
+  //  } else {
+  //    config.frame_size = FRAMESIZE_CIF;
+  //    config.jpeg_quality = 63;  //0-63 lower number means higher quality
+  //    config.fb_count = 1;
+  //  }
 
   // camera init
   esp_err_t err = esp_camera_init(&config);
@@ -153,7 +181,9 @@ void setup() {
   s->set_hmirror(s, 1);        // 0 = disable , 1 = enable
   s->set_vflip(s, 1);          // 0 = disable , 1 = enable
 
-  //  sendPhoto();
+//  delay(5000);
+//  Serial.printf("sending test photo");
+//  sendPhoto();
 
   // GPIO
   pinMode(3, INPUT);
@@ -210,7 +240,7 @@ String sendPhoto() {
 
   if (client.connect(serverName.c_str(), serverPort)) {
     //    Serial.println("Connection successful!");
-    String head = "--RandomNerdTutorials\r\nContent-Disposition: form-data; name=\"imageFile\"; filename=\"esp32-cam.jpg\"\r\nContent-Type: image/jpeg\r\n\r\n";
+    String head = "--RandomNerdTutorials\r\nConnection: Keep-Alive;\r\nContent-Disposition: form-data; name=\"imageFile\"; filename=\"esp32-cam.jpg\"\r\nContent-Type: image/jpeg\r\n\r\n";
     String tail = "\r\n--RandomNerdTutorials--\r\n";
 
     uint32_t imageLen = fb->len;
@@ -313,7 +343,7 @@ void setupSdCard() {
 //Read a file in SD card
 void readFile(fs::FS &fs, const char * path) {
   digitalWrite(ONBOARD_LED, HIGH); //Turn off
-  
+
   delay(1000);
   digitalWrite(ONBOARD_LED, LOW);
   Serial.printf("Reading file: %s\n", path);

@@ -17,8 +17,9 @@ void setup() {
   // camera
   pinMode(A0, OUTPUT);
   digitalWrite(A0, LOW);
-  
-} 
+
+  resetMotor();
+}
 
 void loop() {
   delay(300);
@@ -40,30 +41,40 @@ void handleServo() {
   if (flag) {
 
     pressPowerBtn();
-    pressPasswordBtn1();
+    pressPowerBtn();
     pressPasswordBtn3();
+    pressPasswordBtn1();
 
     digitalWrite(A0, HIGH);
     delay(2000);
     digitalWrite(A0, LOW);
 
     flag = false;
-    delay(12000);
+    delay(10000);
   }
+}
+
+void resetMotor() {
+  // SERVO 2
+  servo2.write(96);
+  // lift up
+  servo1.write(82);
+  // lift up
+  servo3.write(82);
+
 }
 
 void pressPowerBtn() {
 
   // SERVO 2
   servo2.write(96);
-  delay(150);
 
   // press down
-  servo2.write(40);
+  servo2.write(30);
   delay(150);
 
   servo2.write(96);
-  delay(500);
+  delay(150);
 }
 
 
@@ -74,21 +85,42 @@ void pressPasswordBtn1() {
   // lift up
   servo1.write(82);
 
+  // 3
+  // bottom right default #149
+  servo1.write(141);
+  delay(150);
+
+  // lift up
+  servo1.write(82);
+  delay(200);
+
+  // 3
+  // bottom right default #149
+  servo1.write(141);
+  delay(150);
+
+  // lift up
+  servo1.write(82);
+  delay(200);
+
+    // 3
   // bottom right default #149
   servo1.write(140);
   delay(150);
 
   // lift up
   servo1.write(82);
-  delay(600);
-
-  // bottom left  default #35
-  servo1.write(50);
   delay(150);
 
-  // lift up
-  servo1.write(82);
-  delay(600);
+  
+//  // 9
+//  // bottom left  default #35
+//  servo1.write(50);
+//  delay(150);
+//
+//  // lift up
+//  servo1.write(82);
+//  delay(600);
 
 }
 
@@ -97,23 +129,24 @@ void pressPasswordBtn3() {
 
   // SERVO 3
 
+  //  // lift up
+  //  servo3.write(82);
+  //
+  //  // 7
+  //  // bottom right default #149
+  //  servo3.write(130);
+  //  delay(150);
+
   // lift up
   servo3.write(82);
 
-  // bottom right default #149
-  servo3.write(130);
-  delay(150);
-
-  // lift up
-  servo3.write(82);
-  delay(600);
-
+  // 1
   // bottom left  default #35
-  servo3.write(40);
+  servo3.write(37);
   delay(150);
 
   // lift up
   servo3.write(82);
-  delay(600);
+  delay(150);
 
 }
