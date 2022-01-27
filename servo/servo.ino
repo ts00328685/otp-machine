@@ -74,7 +74,7 @@ void pressPowerBtn() {
   delay(150);
 
   servo2.write(96);
-  delay(150);
+  delay(350);
 }
 
 
@@ -87,31 +87,30 @@ void pressPasswordBtn1() {
 
   // 3
   // bottom right default #149
-  servo1.write(141);
-  delay(150);
+  servo1.write(145);
+  delay(170);
 
   // lift up
   servo1.write(82);
-  delay(200);
+  delay(380);
 
   // 3
   // bottom right default #149
-  servo1.write(141);
-  delay(150);
+  servo1.write(145);
+  delay(170);
 
   // lift up
   servo1.write(82);
-  delay(200);
+  delay(380);
 
     // 3
   // bottom right default #149
-  servo1.write(140);
-  delay(150);
+  servo1.write(145);
+  delay(170);
 
   // lift up
   servo1.write(82);
-  delay(150);
-
+  delay(380);
   
 //  // 9
 //  // bottom left  default #35
@@ -143,10 +142,10 @@ void pressPasswordBtn3() {
   // 1
   // bottom left  default #35
   servo3.write(37);
-  delay(150);
+  delay(170);
 
   // lift up
   servo3.write(82);
-  delay(150);
+  delay(380);
 
 }
